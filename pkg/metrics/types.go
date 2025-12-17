@@ -107,6 +107,11 @@ var (
 	ConntrackBytesTx          GaugeVec
 	ConntrackBytesRx          GaugeVec
 	ConntrackTotalConnections GaugeVec
+
+	// Packet Prober Metrics
+	ProbeTotalCounter     CounterVec
+	ProbeFailureCounter   CounterVec
+	ProbeLatencyGauge     GaugeVec
 )
 
 func ToPrometheusType(metric interface{}) prometheus.Collector {

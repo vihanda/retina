@@ -194,6 +194,35 @@ func InitializeMetrics() {
 		parsedPacketsCounterDescription,
 	)
 
+	// Packet Prober Metrics
+	ProbeTotalCounter = exporter.CreatePrometheusCounterVecForMetric(
+		exporter.DefaultRegistry,
+		"probe_total",
+		"Total number of probes executed",
+		"probe_name",
+		"endpoint",
+		"protocol",
+	)
+
+	ProbeFailureCounter = exporter.CreatePrometheusCounterVecForMetric(
+		exporter.DefaultRegistry,
+		"probe_failure_total",
+		"Total number of failed probes",
+		"probe_name",
+		"endpoint",
+		"protocol",
+		"error_type",
+	)
+
+	ProbeLatencyGauge = exporter.CreatePrometheusGaugeVecForMetric(
+		exporter.DefaultRegistry,
+		"probe_latency_milliseconds",
+		"Latest probe latency in milliseconds",
+		"probe_name",
+		"endpoint",
+		"protocol",
+	)
+
 	isInitialized = true
 	metricsLogger.Info("Metrics initialized")
 }
