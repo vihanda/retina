@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: kube-system
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+      # Scrape Retina agent metrics
+      - job_name: 'retina-agent'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - kube-system
+        relabel_configs:
+          # Only scrape pods with label k8s-app=retina
+          - source_labels: [__meta_kubernetes_pod_label_k8s_app]
+            action: keep
+            regex: retina
+          # Use pod IP as target
+          - source_labels: [__meta_kubernetes_pod_ip]
+            action: replace
+            target_label: __address__
+            replacement: $1:10093
+          # Add node name as label
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            action: replace
+            target_label: node
+          # Add pod name as label
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: pod
